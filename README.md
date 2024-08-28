@@ -11,3 +11,7 @@ Trabalho referente à segunda avaliação da disciplina de Algoritmos e Lógica 
 - Definição de um limite de consultas por médico por dia
 - Listagem de consultas de um médico em um determinado dia
 - Exclusão de consultas e ajuste na lista de consultas disponíveis
+
+<div align="center">
+  <img src="https://skillicons.dev/icons?i=py" height="40" alt="python logo"  />
+</div>
