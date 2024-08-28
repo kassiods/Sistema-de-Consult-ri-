@@ -1,5 +1,5 @@
 # Sistema de Consultorio 
-Trabalho do professor Messias algoritmos e lógica de programação
+Trabalho do professor Messias (algoritmos e lógica de programação)
 
 
 Trabalho referente à segunda avaliação da disciplina de Algoritmos e Lógica de Programação. Neste trabalho, deve-se desenvolver um sistema completo de consultoria médica, incluindo as seguintes funcionalidades:
