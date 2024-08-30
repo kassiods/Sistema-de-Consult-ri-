@@ -41,23 +41,30 @@ def cpf_valido(cpf):
         else:
             return "CPF inválido."
 
-
+# funçao de cadastrar medico
 def cadastrar_medico():
     nome_medico = input("Digite o nome do medico: ")
     especialidade = input("Digite a especialidade: ")
-    
-    if nome_medico in lista_medicos:
-        print("Medico ja cadastrado!")
+    credencial_medico = input("Digite a credencial do medico: ") # mudança 1: credencial do medico foi adicionado pelo mesmo motivo do cpf do paciente
+    # if nome_medico or credencial_medico in lista_medicos:
+    for medico in lista_medicos:
+        if medico['nome'] == nome_medico or medico['credencial'] == credencial_medico: # mudança 2: foi adicionado a condiçao de verificar se o medico ja foi cadastrado usando a logica do cadastro do paciente
+            print("Médico já cadastrado!")
+            return
+        print("Medico ja antes cadastrado no sistema!")
     else:
-        medico = {'nome':nome_medico, 'especialidade':especialidade}
+        medico = {'nome':nome_medico, 'credencial':credencial_medico ,'especialidade':especialidade}
         lista_medicos.append(medico)
+        print("Carregando...")
+        sleep(3)
         print("Medico cadastrado com sucesso!")
 
+#funçao de cadastrar paciente
 def cadastrar_paciente():
     nome_paciente = input("Digite o nome do paciente: ")
     cpf_paciente = input("Digite o CPF do paciente (somentes numeros): ")
 
-    if not cpf_valido(cpf_paciente):
+    if not cpf_valido(cpf_paciente): #verifica se o cpf é valido usando a funçao cpf_valido
         print("CPF invalido, entre com um CPF valido!")
         return
     
