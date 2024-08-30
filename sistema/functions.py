@@ -56,9 +56,11 @@ def cadastrar_medico():
 def cadastrar_paciente():
     nome_paciente = input("Digite o nome do paciente: ")
     cpf_paciente = input("Digite o CPF do paciente (somentes numeros): ")
+
     if not cpf_valido(cpf_paciente):
         print("CPF invalido, entre com um CPF valido!")
         return
+    
     for paciente in lista_pacientes:
         if paciente['cpf_paciente'] == cpf_paciente:
             print("Paciente já cadastrado no sistema!")
