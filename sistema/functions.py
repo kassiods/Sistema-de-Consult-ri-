@@ -6,40 +6,28 @@ lista_pacientes = [] #lista pacientes
 lista_consultas = [] #lista consultas
 
 def cpf_valido(cpf):
-    # Verifica se o CPF tem 11 dígitos
+    # Verifica se o CPF tem 11 dígitos e é numérico
     if len(cpf) != 11 or not cpf.isdigit():
-        return "CPF inválido."
-    else:
-        # Converte o CPF em uma lista de inteiros
-        cpf = [int(digit) for digit in cpf]
+        return False
 
-        # Verifica se todos os caracteres são dígitos
-        is_valid = True
-        for digit in cpf:
-            if digit < 0 or digit > 9:
-                is_valid = False
-                break
+    # Converte o CPF em uma lista de inteiros
+    cpf = [int(digit) for digit in cpf]
 
-        if is_valid:
-            # Calcula o primeiro dígito verificador
-            soma1 = 0
-            for i in range(9):
-                soma1 += cpf[i] * (10 - i)
-            digito1 = (soma1 * 10 % 11) % 10
+    # Verifica se todos os caracteres são dígitos válidos (de 0 a 9)
+    for digit in cpf:
+        if digit < 0 or digit > 9:
+            return False
 
-            # Calcula o segundo dígito verificador
-            soma2 = 0
-            for i in range(10):
-                soma2 += cpf[i] * (11 - i)
-            digito2 = (soma2 * 10 % 11) % 10
+    # Calcula o primeiro dígito verificador
+    soma1 = sum(cpf[i] * (10 - i) for i in range(9))
+    digito1 = (soma1 * 10 % 11) % 10
 
-            # Verifica se os dígitos calculados são iguais aos fornecidos
-            if digito1 == cpf[9] and digito2 == cpf[10]:
-                return "CPF válido."
-            else:
-                return "CPF inválido."
-        else:
-            return "CPF inválido."
+    # Calcula o segundo dígito verificador
+    soma2 = sum(cpf[i] * (11 - i) for i in range(10))
+    digito2 = (soma2 * 10 % 11) % 10
+
+    # Verifica se os dígitos calculados são iguais aos fornecidos
+    return digito1 == cpf[9] and digito2 == cpf[10]
 
 # funçao de cadastrar medico
 def cadastrar_medico():
@@ -49,9 +37,8 @@ def cadastrar_medico():
     # if nome_medico or credencial_medico in lista_medicos:
     for medico in lista_medicos:
         if medico['credencial'] == credencial_medico: # mudança 2: foi adicionado a condiçao de verificar se o medico ja foi cadastrado usando a logica do cadastro do paciente
-            print("Médico já cadastrado!")
+            print("Medico ja antes cadastrado no sistema!")
             return
-        print("Medico ja antes cadastrado no sistema!")
     else:
         medico = {'nome':nome_medico, 'credencial':credencial_medico ,'especialidade':especialidade}
         lista_medicos.append(medico)
