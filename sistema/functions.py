@@ -31,20 +31,28 @@ def cpf_valido(cpf):
 
 # funçao de cadastrar medico
 def cadastrar_medico():
-    nome_medico = input("Digite o nome do medico: ")
+    nome_medico = input("Digite o nome do médico: ")
     especialidade = input("Digite a especialidade: ")
-    credencial_medico = input("Digite a credencial do medico: ") # mudança 1: credencial do medico foi adicionado pelo mesmo motivo do cpf do paciente
-    # if nome_medico or credencial_medico in lista_medicos:
+    credencial_medico = input("Digite a credencial do médico: ")
+    limite_atendimentos = int(input("Quantos pacientes o médico pode atender por dia: "))
+
+    # Verifica se o médico já foi cadastrado
     for medico in lista_medicos:
-        if medico['credencial'] == credencial_medico: # mudança 2: foi adicionado a condiçao de verificar se o medico ja foi cadastrado usando a logica do cadastro do paciente
-            print("Medico ja antes cadastrado no sistema!")
+        if medico['credencial'] == credencial_medico:
+            print("Médico já cadastrado no sistema!")
             return
-    else:
-        medico = {'nome':nome_medico, 'credencial':credencial_medico ,'especialidade':especialidade}
-        lista_medicos.append(medico)
-        print("Carregando...")
-        sleep(3)
-        print("Medico cadastrado com sucesso!")
+
+    medico = {
+        'nome': nome_medico,
+        'credencial': credencial_medico,
+        'especialidade': especialidade,
+        'limite_atendimento': limite_atendimentos
+    }
+
+    lista_medicos.append(medico)
+    print("Carregando...")
+    sleep(1)
+    print("Médico cadastrado com sucesso!")
 
 #funçao de cadastrar paciente
 def cadastrar_paciente():
@@ -61,12 +69,87 @@ def cadastrar_paciente():
             return
         
     email_paciente = input("Digite o email do paciente: ")
-    paciente = {'nome_paciente': nome_paciente, 'cpf_paciente':cpf_paciente, 'email_paciente': email_paciente}
+    paciente = {'nome_paciente': nome_paciente, 
+                'cpf_paciente':cpf_paciente, 
+                'email_paciente': email_paciente}
+    
     lista_pacientes.append(paciente)
     print("Carregando...")
-    sleep(3)
+    sleep(1)
     print("Paciente cadastrado com sucesso!")
 
+def listar_medicos():
+    for medico in lista_medicos:
+        print(f"Medicos disponiveis no consultorio: {medico}")
+
+def verificar_limite_consultas(medico_escolhido, dia_consulta):
+    # Cria uma lista vazia para contar as consultas do dia
+    consultas_do_dia = []
+
+    # Verifica cada consulta na lista de consultas
+    for consulta in lista_consultas:
+        # Se o médico e o dia da consulta correspondem, adiciona à lista
+        if consulta['medico_escolhido'] == medico_escolhido and consulta['dia_consulta'] == dia_consulta:
+            consultas_do_dia.append(consulta)
+
+    # Procura o médico na lista de médicos
+    medico = None
+    for med in lista_medicos:
+        if med['nome'] == medico_escolhido:
+            medico = med
+            break
+
+    # Se encontrou o médico e o número de consultas do dia for menor que o limite, retorna True
+    if medico is not None and len(consultas_do_dia) < medico['limite_atendimento']:
+        print("Consulta cadastrada")
+        return True
+    
+    # Se não encontrou o médico ou já atingiu o limite, retorna False
+    print("Medico atingiu o maximo de consultas!")
+    return False
+
+
+def agendar_consulta():
+    nome_paciente = input("Digite o nome do paciente: ")
+    cpf_paciente = input("Digite o CPF do paciente (somentes numeros): ")
+    for paciente in lista_pacientes:
+        if paciente['cpf_paciente'] == cpf_paciente and paciente['nome_paciente'] == nome_paciente:
+            print("Paciente já cadastrado no sistema!")
+            paciente_cadastrado = True
+            break
+    if not paciente_cadastrado:
+        cadastrar_paciente()
+    #CONTINUA O AGENDAMENTO DA CONSULTA
+    print("Carregando médicos disponíveis no consultório...")
+    sleep(1)
+    listar_medicos()
+
+    medico_escolhido = input("Com que médico deseja se consultar: ")
+
+    if medico_escolhido not in [medico['nome'] for medico in lista_medicos]:
+        print("Médico indisponível no consultório!")
+        return
+
+    dia_consulta = input("Qual o dia da consulta: ")
+
+    # Verifica o limite de consultas do médico no dia
+    if not agendar_consulta(medico_escolhido, dia_consulta):
+        print("Este médico já atingiu o limite de consultas para o dia!")
+        return
+
+    hora_consulta = input("Qual o horário da consulta: ")
+    consulta = {
+        'nome_paciente': nome_paciente,
+        'cpf_paciente': cpf_paciente,
+        'medico_escolhido': medico_escolhido,
+        'dia_consulta': dia_consulta,
+        'hora_consulta': hora_consulta
+    }
+    lista_consultas.append(consulta)
+    print("Consulta agendada com sucesso!")
+    
+
+    
 def main():
     while True:   
         print("\n=== Sistema de Controle de Consultas ===")
@@ -82,6 +165,9 @@ def main():
             cadastrar_medico()
         elif opcao == "2":
             cadastrar_paciente()
+        elif opcao == "3":
+            agendar_consulta()
+
 
 if __name__ == "__main__":
     main()
