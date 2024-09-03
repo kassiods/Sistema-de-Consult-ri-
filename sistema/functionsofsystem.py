@@ -84,6 +84,23 @@ def listar_medicos():
         indice = lista_medicos.index(medico) + 1 
         print(f" {indice} - Médico: {medico['nome']}, Especialidade: {medico['especialidade']}")
 
+
+
+def excluir_medico():
+    print("listando medicos...")
+    sleep(1)
+    try:
+        medico_exclude= int(input("Qual indice do medico que deseja excluir:"))
+        if medico_exclude < 0 or medico_exclude > len(lista_medicos):
+            print("Indice invalido")
+            return 
+        else:
+            lista_medicos.pop(medico_exclude - 1) #.pop é um metodo que remove o item de uma lista dado o seu indice, o indice é passado como argumento para o metodo .pop 
+            print("Medico excluido com sucesso!")
+    except ValueError:
+        print("Digite apenas o indice, não o nome do medico, ou qualquer outra credencial na lista")
+    
+
 # Função para cadastrar paciente
 # feito em grupo na sala
 def cadastrar_paciente():
@@ -126,6 +143,8 @@ def listar_pacientes():
         indice = lista_pacientes.index(paciente) + 1 
 
         print(f"{indice}- Paciente: {paciente['nome_paciente']}, CPF: {paciente['cpf_paciente']}, Email: {paciente['email_paciente']}")
+
+
 
 
 # Função para verificar se o médico atingiu o limite de consultas
