@@ -1,46 +1,49 @@
-# eu fiz novas funções e modifiquei algumas funções que foram feitas em grupo na sala, para melhorar o entendimento e a funcionalidade do sistema, Kassio, leia as anotaçoesa
-# descobri que é quase impossivel criar um crm valido, pois o crm é um numero unico para cada medico, e nao tem como criar um crm valido
-# e tirei as list comprehension para melhor entendimento, pois acho que nao é necessario para esse sistema
-# fui eu que fiz a logica do indice, para mostrar o indice do medico, paciente e consulta, para melhor entendimento
-
 # importando a função sleep da biblioteca time
 from time import sleep
-
 lista_medicos = [] # lista medicos
 lista_pacientes = [] # lista pacientes
 lista_consultas = [] # lista consultas
 
+# Função para verificar se um CPF é válido
+# feito em grupo na sala
 def cpf_valido(cpf):
     # Verifica se o CPF tem 11 dígitos
     if len(cpf) != 11 or not cpf.isdigit():
-        return False
+        return "CPF inválido."
     else:
         # Converte o CPF em uma lista de inteiros
-        cpf_int = []
+        cpf = [int(digit) for digit in cpf]
+
+        # Verifica se todos os caracteres são dígitos
+        is_valid = True
         for digit in cpf:
-            cpf_int.append(int(digit))
+            if digit < 0 or digit > 9:
+                is_valid = False
+                break
 
-        # Verifica se todos os dígitos são iguais (CPF inválido)
-        if cpf_int == cpf_int[::-1]:
-            return False
+        if is_valid:
+            # Calcula o primeiro dígito verificador
+            soma1 = 0
+            for i in range(9):
+                soma1 += cpf[i] * (10 - i)
+            digito1 = (soma1 * 10 % 11) % 10
 
-        # Calcula o primeiro dígito verificador
-        soma1 = 0
-        for i in range(9):
-            soma1 += cpf_int[i] * (10 - i)
-        digito1 = (soma1 * 10 % 11) % 10
+            # Calcula o segundo dígito verificador
+            soma2 = 0
+            for i in range(10):
+                soma2 += cpf[i] * (11 - i)
+            digito2 = (soma2 * 10 % 11) % 10
 
-        # Calcula o segundo dígito verificador
-        soma2 = 0
-        for i in range(10):
-            soma2 += cpf_int[i] * (11 - i)
-        digito2 = (soma2 * 10 % 11) % 10
-
-        # Verifica se os dígitos calculados são iguais aos fornecidos
-        return digito1 == cpf_int[9] and digito2 == cpf_int[10]
+            # Verifica se os dígitos calculados são iguais aos fornecidos
+            if digito1 == cpf[9] and digito2 == cpf[10]:
+                return "CPF válido."
+            else:
+                return "CPF inválido."
+        else:
+            return "CPF inválido."
 
 # Função para cadastrar médico 
-# feito em grupo na sala  
+# feito em grupo na sala mas modificado por mim, pensando em alguma situaçao que alguem tente cadastrar um medico que ja esta cadastrado
 def cadastrar_medico():
     nome_medico = input("Digite o nome do médico: ")
     especialidade = input("Digite a especialidade: ")
@@ -83,7 +86,6 @@ def listar_medicos():
 
         indice = lista_medicos.index(medico) + 1 
         print(f" {indice} - Médico: {medico['nome']}, Especialidade: {medico['especialidade']}")
-
 
 
 def excluir_medico():
@@ -145,7 +147,21 @@ def listar_pacientes():
         print(f"{indice}- Paciente: {paciente['nome_paciente']}, CPF: {paciente['cpf_paciente']}, Email: {paciente['email_paciente']}")
 
 
+def excluir_paciente():
+    print("listando pacientes...")
+    sleep(1)
 
+    try:
+        paciente_exclude= int(input("Qual indice do paciente que deseja excluir:"))
+        if paciente_exclude < 0 or paciente_exclude > len(lista_pacientes):
+            print("Indice invalido")
+            return 
+        else:
+            lista_pacientes.pop(paciente_exclude - 1)
+            print("Paciente excluido com sucesso!")
+
+    except ValueError:
+        print("Digite apenas o indice, não o nome do paciente, ou qualquer outro cpf na lista")
 
 # Função para verificar se o médico atingiu o limite de consultas
 # feito em grupo na sala mas modificado por mim, tirando os list compression para melhor entendimento
@@ -232,19 +248,18 @@ def listar_consultas():
         print(f"{indice}- Consulta agendada: Paciente {consulta['nome_paciente']} com o médico {consulta['medico_escolhido']} no dia {consulta['dia_consulta']} às {consulta['hora_consulta']}.")
 
 
+def excluir_consulta():
+    print("listando consultas...")
+    sleep(1)
 
+    try:
+        consulta_exclude= int(input("Qual indice da consulta que deseja excluir:"))
+        if consulta_exclude < 0 or consulta_exclude > len(lista_consultas):
+            print("Indice invalido")
+            return 
+        else:
+            lista_consultas.pop(consulta_exclude - 1)
+            print("Consulta excluida com sucesso!")
 
-# Funções para excluir vao ser feitas posterirmente, pois ainda nao foi feito em grupo na sala com jp e kassio 
-
-'''vai ser usado essa logica 
-o professor mostrou essa logica qnd foi feito em grupo na sala as dois primeiros exercicios de listas, tuplas, dicionarios e conjuntos
-
-
-isso foi tirado da atividade que ele passou 
-
-# Exemplo de lista
-frutas = ['maçã', 'banana', 'laranja']
-# frutas.append('uva')  # Adiciona 'uva' ao final da lista # nao vai ser usado
-frutas.remove('banana')  # Remove 'banana' da lista # vai ser usado especificamente para excluir um medico, paciente ou consulta da suas respectivas listas
-print(frutas)  # Saída: ['maçã', 'laranja', 'uva']
-'''
+    except ValueError:
+        print("Digite apenas o indice, não o nome do paciente, ou qualquer outro cpf na lista")
