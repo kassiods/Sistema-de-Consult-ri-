@@ -330,7 +330,7 @@ def pesquisar_paciente():
             paciente_encontrado = True
 
 
-            resposta = input('Deseja agendar uma consulta para esse paciente? S/N').upper()
+            resposta = input('Deseja agendar uma consulta para esse paciente? S/N').capitalize()
             if resposta == "S":
                 agendar_consulta()
             else:
@@ -351,7 +351,7 @@ def pesquisar_consulta():
             print("A consulta está agendada")
             consulta_encontrada = True
 
-
+            
             resposta = input('Deseja cancelar essa consulta? S/N').upper()
             if resposta == "S":
                 excluir_consulta()
